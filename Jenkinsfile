@@ -1,26 +1,22 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Build') {
             steps {
                 script {
-                    // Trạng thái là "PENDING" khi build đang chạy
-                    githubNotify context: 'CI', status: 'PENDING', description: 'Building...'
+                    // Giả lập quá trình build
+                    echo "Building..."
                 }
-                // Code build ở đây (ví dụ: Maven, NPM)
-                echo "Building..."
             }
         }
-        
+
         stage('Test') {
             steps {
                 script {
-                    // Sau khi build thành công
-                    githubNotify context: 'CI', status: 'SUCCESS', description: 'Tests passed'
+                    // Giả lập quá trình test
+                    echo "Testing..."
                 }
-                // Code test ở đây
-                echo "Testing..."
             }
         }
     }
@@ -28,14 +24,15 @@ pipeline {
     post {
         success {
             script {
-                // Trạng thái thành công
-                githubNotify context: 'CI', status: 'SUCCESS', description: 'Build Successful'
+                // Sử dụng publishChecks để gửi trạng thái thành công về GitHub
+                publishChecks name: 'CI', status: 'SUCCESS', description: 'Build successful', targetUrl: 'http://your-link-to-ci-report.com'
             }
         }
+
         failure {
             script {
-                // Trạng thái thất bại
-                githubNotify context: 'CI', status: 'FAILURE', description: 'Build Failed'
+                // Sử dụng publishChecks để gửi trạng thái thất bại về GitHub
+                publishChecks name: 'CI', status: 'FAILURE', description: 'Build failed', targetUrl: 'http://your-link-to-ci-report.com'
             }
         }
     }
