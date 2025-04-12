@@ -20,20 +20,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        success {
-            script {
-                // Sử dụng publishChecks để gửi trạng thái thành công về GitHub
-                publishChecks name: 'CI', status: 'SUCCESS', conclusion: 'SUCCESS'
-            }
-        }
-
-        failure {
-            script {
-                // Sử dụng publishChecks để gửi trạng thái thất bại về GitHub
-                publishChecks name: 'CI', status: 'FAILURE', conclusion: 'FAILURE'
-            }
-        }
-    }
 }
