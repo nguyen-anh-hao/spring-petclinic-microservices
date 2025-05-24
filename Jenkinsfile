@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = 'anhhao2004'
-        COMMIT_ID = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        DOCKER_REGISTRY = 'anhhao2004'  // Thay bằng username Docker Hub của bạn
+        COMMIT_ID = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()  // Lấy 7 ký tự đầu của commit ID
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                checkout scm 
+                checkout scm  // Checkout toàn bộ repo
             }
         }
 
@@ -26,6 +26,9 @@ pipeline {
                         'vets-service',
                         'visits-service'
                     ]
+
+                    // Chạy lệnh Maven để build tất cả các service (có thể không cần nếu build riêng từng service)
+                    sh "./mvnw clean package -DskipTests"
 
                     // Lặp qua từng service để build và push
                     services.each { service ->
@@ -52,10 +55,9 @@ pipeline {
             }
         }
 
-        stage('Notify/Deploy') {
+        stage('Notify') {
             steps {
                 echo "All images pushed to Docker Hub with tag: ${COMMIT_ID}"
-                // Có thể thêm webhook trigger ArgoCD tại đây
             }
         }
     }
