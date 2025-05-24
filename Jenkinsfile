@@ -33,7 +33,7 @@ pipeline {
                         def containerTag = "${COMMIT_ID}"
 
                         // Thay đổi thư mục làm việc
-                        sh "cd ${service}"
+                        sh "cd spring-petclinic-${service}"
 
                         // Build image bằng Maven profile và tag bằng COMMIT_ID
                         sh """./mvnw clean install -P buildDocker -Dmaven.test.skip=true \
