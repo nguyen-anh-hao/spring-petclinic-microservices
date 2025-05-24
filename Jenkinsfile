@@ -38,10 +38,10 @@ pipeline {
                         // Build image bằng Maven profile và tag bằng COMMIT_ID
                         sh """./mvnw clean install -P buildDocker -Dmaven.test.skip=true -Ddocker.image.prefix=${DOCKER_REGISTRY}"""
                         // Tag
-                        sh """docker tag anhhao2004/spring-petclinic-admin-server anhhao2004/spring-petclinic-admin-server:${containerTag}"""
+                        sh """docker tag anhhao2004/spring-petclinic-${service} anhhao2004/spring-petclinic-${service}:${containerTag}"""
                         // Push image lên Docker Hub
                         withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
-                            sh "docker push ${DOCKER_REGISTRY}/${service}:${containerTag}"
+                            sh "docker push ${DOCKER_REGISTRY}/spring-petclinic-${service}:${containerTag}"
                         }
 
                         // Quay lại thư mục gốc
