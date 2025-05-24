@@ -36,8 +36,9 @@ pipeline {
                         sh "cd spring-petclinic-${service}"
 
                         // Build image bằng Maven profile và tag bằng COMMIT_ID
-                        sh """mvn clean install -P buildDocker -Dmaven.test.skip=true -Ddocker.image.prefix=${DOCKER_REGISTRY} -Ddocker.image.tag=${containerTag}"""
-
+                        sh """mvn clean install -P buildDocker -Dmaven.test.skip=true -Ddocker.image.prefix=${DOCKER_REGISTRY}"""
+                        // Tag
+                        sh """docker tag anhhao2004/spring-petclinic-admin-server anhhao2004/spring-petclinic-admin-server:${containerTag}"""
                         // Push image lên Docker Hub
                         withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
                             sh "docker push ${DOCKER_REGISTRY}/${service}:${containerTag}"
