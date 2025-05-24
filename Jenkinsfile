@@ -27,9 +27,6 @@ pipeline {
                         'visits-service'
                     ]
 
-                    // Chạy lệnh Maven để build tất cả các service (có thể không cần nếu build riêng từng service)
-                    sh "./mvnw clean package -DskipTests"
-
                     // Lặp qua từng service để build và push
                     services.each { service ->
                         // Định nghĩa tag là COMMIT_ID
@@ -39,9 +36,7 @@ pipeline {
                         sh "cd spring-petclinic-${service}"
 
                         // Build image bằng Maven profile và tag bằng COMMIT_ID
-                        sh """./mvnw clean install -P buildDocker -Dmaven.test.skip=true \
-                            -Ddocker.image.prefix=${DOCKER_REGISTRY} \
-                            -Ddocker.image.tag=${containerTag}"""
+                        sh """mvn clean install -P buildDocker -Dmaven.test.skip=true -Ddocker.image.prefix=${DOCKER_REGISTRY} -Ddocker.image.tag=${containerTag}"""
 
                         // Push image lên Docker Hub
                         withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
